@@ -1,0 +1,72 @@
+Analysis Summary - 20250825_213742
+==================================================
+
+Device used: cuda
+Number of texts analyzed: 23767
+Mamba model: state-spaces/mamba-130m-hf
+Transformer model: gpt2
+
+Universality Analysis Results:
+------------------------------
+Mamba Universality Analysis:
+Total neurons analyzed: 768
+Mean universality score: 2.4223
+Std universality score: 0.3056
+Top 10 Mamba universal neurons:
+  1. Neuron 634: 3.1502
+  2. Neuron 724: 3.1313
+  3. Neuron 584: 3.1279
+  4. Neuron 734: 3.1245
+  5. Neuron 684: 3.1177
+  6. Neuron 648: 3.1106
+  7. Neuron 730: 3.1100
+  8. Neuron 566: 3.1064
+  9. Neuron 736: 3.1053
+  10. Neuron 748: 3.0926
+
+Transformer Universality Analysis:
+Total neurons analyzed: 768
+Mean universality score: 1.8073
+Std universality score: 0.0507
+Top 10 Transformer universal neurons:
+  1. Neuron 28: 1.8788
+  2. Neuron 9: 1.8748
+  3. Neuron 33: 1.8737
+  4. Neuron 12: 1.8735
+  5. Neuron 29: 1.8731
+  6. Neuron 13: 1.8726
+  7. Neuron 670: 1.8722
+  8. Neuron 422: 1.8721
+  9. Neuron 34: 1.8718
+  10. Neuron 11: 1.8714
+
+Model Comparison:
+Mamba vs Transformer universality correlation: -0.3529
+Mamba universality range: [1.8549, 3.1502]
+Transformer universality range: [1.7239, 1.8788]
+
+Delta Analysis Results:
+-------------------------
+Top Mamba delta-sensitive neurons:
+  1. Neuron 1214: variance 1.1939
+  2. Neuron 1474: variance 1.0972
+  3. Neuron 791: variance 0.6712
+  4. Neuron 1227: variance 0.6646
+  5. Neuron 1278: variance 0.6299
+  6. Neuron 1126: variance 0.6273
+  7. Neuron 773: variance 0.6141
+  8. Neuron 1016: variance 0.5677
+  9. Neuron 601: variance 0.5660
+  10. Neuron 715: variance 0.5268
+
+Top Transformer variance neurons:
+  1. Neuron 674: variance 0.2027
+  2. Neuron 670: variance 0.1825
+  3. Neuron 745: variance 0.1823
+  4. Neuron 300: variance 0.1352
+  5. Neuron 627: variance 0.1250
+  6. Neuron 107: variance 0.1119
+  7. Neuron 655: variance 0.1045
+  8. Neuron 356: variance 0.0960
+  9. Neuron 86: variance 0.0865
+  10. Neuron 19: variance 0.0761
