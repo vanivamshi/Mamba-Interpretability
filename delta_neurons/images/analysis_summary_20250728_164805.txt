@@ -1,0 +1,23 @@
+NEURON ANALYSIS - GENERATED IMAGES SUMMARY
+==================================================
+Generated on: 2025-07-28 16:48:05
+
+Total images generated: 6
+
+IMAGE LIST:
+--------------------
+ 1. bias_heatmap_gpt2.png (130.5 KB)
+ 2. bias_heatmap_mamba-130m-hf.png (130.2 KB)
+ 3. bottleneck_analysis.png (401.6 KB)
+ 4. delta_intervention_amplification.png (203.2 KB)
+ 5. delta_intervention_suppression.png (211.7 KB)
+ 6. polysemantic_activations_neuron_560.png (71.2 KB)
+
+IMAGE DESCRIPTIONS:
+--------------------
+• bias_heatmap_gpt2.png: Bias sensitivity heatmap showing neuron responses to different bias pairs
+• bias_heatmap_mamba-130m-hf.png: Bias sensitivity heatmap showing neuron responses to different bias pairs
+• bottleneck_analysis.png: Comprehensive bottleneck analysis showing perturbation effects, individual neuron contributions, noise sensitivity, and classification results
+• delta_intervention_amplification.png: Effect of knowledge neuron amplification comparing Mamba vs Transformer baseline
+• delta_intervention_suppression.png: Effect of knowledge neuron suppression comparing Mamba vs Transformer baseline
+• polysemantic_activations_neuron_560.png: Top activations for polysemantic neurons showing token-level responses
