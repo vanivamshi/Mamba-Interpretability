@@ -1,0 +1,192 @@
+{
+  "analysis_timestamp": "2025-07-10T15:13:26.949037",
+  "model_name": "gpt2",
+  "specialty_neurons": {
+    "factual": [
+      [
+        138,
+        0.10665345937013626
+      ],
+      [
+        521,
+        0.10431908071041107
+      ],
+      [
+        121,
+        0.0910019725561142
+      ],
+      [
+        680,
+        0.08844079077243805
+      ],
+      [
+        18,
+        0.08534128218889236
+      ],
+      [
+        596,
+        0.08514373004436493
+      ],
+      [
+        480,
+        0.08511868119239807
+      ],
+      [
+        67,
+        0.08501380681991577
+      ]
+    ],
+    "narrative": [
+      [
+        138,
+        0.12751713395118713
+      ],
+      [
+        266,
+        0.1132311224937439
+      ],
+      [
+        87,
+        0.11211319267749786
+      ],
+      [
+        480,
+        0.11164965480566025
+      ],
+      [
+        64,
+        0.10501173138618469
+      ],
+      [
+        84,
+        0.10460153967142105
+      ],
+      [
+        373,
+        0.09502903372049332
+      ],
+      [
+        447,
+        0.09366319328546524
+      ]
+    ],
+    "technical": [
+      [
+        138,
+        0.12751713395118713
+      ],
+      [
+        266,
+        0.1132311224937439
+      ],
+      [
+        87,
+        0.11211319267749786
+      ],
+      [
+        480,
+        0.11164965480566025
+      ],
+      [
+        64,
+        0.10501173138618469
+      ],
+      [
+        84,
+        0.10460153967142105
+      ],
+      [
+        521,
+        0.10431908071041107
+      ],
+      [
+        373,
+        0.09502903372049332
+      ]
+    ]
+  },
+  "template_robustness": {
+    "P176": {
+      "mean_fact_correlation": 0.9786888806524596,
+      "std_fact_correlation": 0.003655871849538463,
+      "mean_specialty_correlation": 0.8907843218605528,
+      "std_specialty_correlation": 0.05743738552844861,
+      "num_facts_analyzed": 5,
+      "relation_type": "P176",
+      "relation_name": "manufacturer"
+    },
+    "P463": {
+      "mean_fact_correlation": 0.9829714449276885,
+      "std_fact_correlation": 0.0023681555563095156,
+      "mean_specialty_correlation": 0.8427022015061706,
+      "std_specialty_correlation": 0.07153118952699092,
+      "num_facts_analyzed": 5,
+      "relation_type": "P463",
+      "relation_name": "member_of"
+    },
+    "P407": {
+      "mean_fact_correlation": 0.986059611600463,
+      "std_fact_correlation": 0.006528208977433128,
+      "mean_specialty_correlation": 0.96414685140895,
+      "std_specialty_correlation": 0.034808016822592935,
+      "num_facts_analyzed": 5,
+      "relation_type": "P407",
+      "relation_name": "language_of_work"
+    }
+  },
+  "typo_robustness_summary": {
+    "tested_typo_types": [],
+    "overall_consistency": {}
+  },
+  "delta_sensitivity": {
+    "top_neurons": [
+      [
+        87,
+        41.31887435913086
+      ],
+      [
+        480,
+        7.024511814117432
+      ],
+      [
+        266,
+        5.514473915100098
+      ],
+      [
+        497,
+        2.152082681655884
+      ],
+      [
+        218,
+        1.5410125255584717
+      ],
+      [
+        373,
+        1.430158257484436
+      ],
+      [
+        464,
+        1.3632357120513916
+      ],
+      [
+        7,
+        1.167988896369934
+      ]
+    ]
+  },
+  "delta_transformer_sensitivity": {
+    "top_neurons": []
+  },
+  "knowledge_neuron_overlap": {
+    "intra_relation": {
+      "num_pairs": 0,
+      "avg_overlap_pct": 0,
+      "avg_intersection_size": 0
+    },
+    "inter_relation": {
+      "num_pairs": 0,
+      "avg_overlap_pct": 0,
+      "avg_intersection_size": 0
+    }
+  }
+}
