@@ -1,0 +1,41 @@
+{
+  "analysis_timestamp": "2025-07-07T19:20:12.813152",
+  "models_analyzed": [
+    "Mamba-130M",
+    "GPT2-Small"
+  ],
+  "summary_statistics": {
+    "Mamba-130M": {
+      "parameters_millions": 129.13536,
+      "hidden_size": 768,
+      "inference_time_mean": 4.890514230728149,
+      "perplexity": 56.33622660702315,
+      "neuron_variance_stats": {
+        "mean": 0.0024562811013311148,
+        "std": 0.004561264533549547,
+        "max": 0.06960941106081009,
+        "min": 0.0003484812332317233
+      },
+      "neuron_sparsity_stats": {
+        "mean": 0.15520833333333334,
+        "std": 0.09650466849674509
+      }
+    },
+    "GPT2-Small": {
+      "parameters_millions": 124.439808,
+      "hidden_size": 768,
+      "inference_time_mean": 1.5541138648986816,
+      "perplexity": 68.6319920201521,
+      "neuron_variance_stats": {
+        "mean": 0.06698033213615417,
+        "std": 0.30995455384254456,
+        "max": 6.529053211212158,
+        "min": 0.0071373977698385715
+      },
+      "neuron_sparsity_stats": {
+        "mean": 0.028450520833333333,
+        "std": 0.035294325210858526
+      }
+    }
+  }
+}
