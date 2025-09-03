@@ -1,0 +1,252 @@
+Analysis Summary - 20250828_220113
+==================================================
+
+Device used: cuda
+Number of texts analyzed: 23767
+Mamba model: state-spaces/mamba-130m-hf
+Transformer model: gpt2
+
+Universality Analysis Results:
+------------------------------
+Mamba Universality Analysis:
+Total neurons analyzed: 768
+Mean universality score: 2.4223
+Std universality score: 0.3056
+Top 10 Mamba universal neurons:
+  1. Neuron 634: 3.1502
+  2. Neuron 724: 3.1313
+  3. Neuron 584: 3.1279
+  4. Neuron 734: 3.1245
+  5. Neuron 684: 3.1177
+  6. Neuron 648: 3.1106
+  7. Neuron 730: 3.1100
+  8. Neuron 566: 3.1064
+  9. Neuron 736: 3.1053
+  10. Neuron 748: 3.0926
+
+Transformer Universality Analysis:
+Total neurons analyzed: 768
+Mean universality score: 1.8073
+Std universality score: 0.0507
+Top 10 Transformer universal neurons:
+  1. Neuron 28: 1.8788
+  2. Neuron 9: 1.8748
+  3. Neuron 33: 1.8737
+  4. Neuron 12: 1.8735
+  5. Neuron 29: 1.8731
+  6. Neuron 13: 1.8726
+  7. Neuron 670: 1.8722
+  8. Neuron 422: 1.8721
+  9. Neuron 34: 1.8718
+  10. Neuron 11: 1.8714
+
+Model Comparison:
+Mamba vs Transformer universality correlation: -0.3529
+Mamba universality range: [1.8549, 3.1502]
+Transformer universality range: [1.7239, 1.8788]
+
+Delta Analysis Results:
+-------------------------
+Top Mamba delta-sensitive neurons:
+  1. Neuron 1474: variance 1.2102
+  2. Neuron 1214: variance 1.0313
+  3. Neuron 1278: variance 0.7153
+  4. Neuron 791: variance 0.6087
+  5. Neuron 1126: variance 0.5805
+  6. Neuron 601: variance 0.5450
+  7. Neuron 773: variance 0.5440
+  8. Neuron 528: variance 0.5292
+  9. Neuron 1016: variance 0.5246
+  10. Neuron 715: variance 0.4621
+  11. Neuron 1401: variance 0.4457
+  12. Neuron 1442: variance 0.4339
+  13. Neuron 989: variance 0.4258
+  14. Neuron 888: variance 0.4242
+  15. Neuron 1227: variance 0.4166
+  16. Neuron 156: variance 0.3929
+  17. Neuron 500: variance 0.3622
+  18. Neuron 935: variance 0.3527
+  19. Neuron 1105: variance 0.3309
+  20. Neuron 1170: variance 0.3270
+  21. Neuron 724: variance 0.3113
+  22. Neuron 25: variance 0.3064
+  23. Neuron 610: variance 0.2972
+  24. Neuron 1175: variance 0.2892
+  25. Neuron 15: variance 0.2768
+  26. Neuron 540: variance 0.2727
+  27. Neuron 492: variance 0.2626
+  28. Neuron 586: variance 0.2580
+  29. Neuron 291: variance 0.2479
+  30. Neuron 443: variance 0.2478
+  31. Neuron 833: variance 0.2439
+  32. Neuron 793: variance 0.2403
+  33. Neuron 972: variance 0.2398
+  34. Neuron 661: variance 0.2360
+  35. Neuron 539: variance 0.2323
+  36. Neuron 1483: variance 0.2323
+  37. Neuron 1119: variance 0.2319
+  38. Neuron 1157: variance 0.2255
+  39. Neuron 151: variance 0.2187
+  40. Neuron 1012: variance 0.2187
+  41. Neuron 1297: variance 0.2180
+  42. Neuron 1314: variance 0.2138
+  43. Neuron 1137: variance 0.2103
+  44. Neuron 279: variance 0.2035
+  45. Neuron 543: variance 0.1998
+  46. Neuron 1080: variance 0.1976
+  47. Neuron 1073: variance 0.1976
+  48. Neuron 195: variance 0.1960
+  49. Neuron 1061: variance 0.1893
+  50. Neuron 1106: variance 0.1884
+  51. Neuron 1032: variance 0.1882
+  52. Neuron 744: variance 0.1866
+  53. Neuron 553: variance 0.1856
+  54. Neuron 983: variance 0.1845
+  55. Neuron 1079: variance 0.1838
+  56. Neuron 1469: variance 0.1834
+  57. Neuron 1383: variance 0.1826
+  58. Neuron 684: variance 0.1810
+  59. Neuron 616: variance 0.1804
+  60. Neuron 521: variance 0.1739
+  61. Neuron 1196: variance 0.1739
+  62. Neuron 221: variance 0.1698
+  63. Neuron 848: variance 0.1691
+  64. Neuron 783: variance 0.1688
+  65. Neuron 380: variance 0.1684
+  66. Neuron 1372: variance 0.1670
+  67. Neuron 907: variance 0.1662
+  68. Neuron 1021: variance 0.1660
+  69. Neuron 72: variance 0.1658
+  70. Neuron 1534: variance 0.1646
+  71. Neuron 152: variance 0.1638
+  72. Neuron 545: variance 0.1637
+  73. Neuron 714: variance 0.1617
+  74. Neuron 447: variance 0.1613
+  75. Neuron 952: variance 0.1613
+  76. Neuron 1171: variance 0.1600
+  77. Neuron 83: variance 0.1598
+  78. Neuron 142: variance 0.1593
+  79. Neuron 694: variance 0.1589
+  80. Neuron 740: variance 0.1565
+  81. Neuron 80: variance 0.1562
+  82. Neuron 827: variance 0.1551
+  83. Neuron 1304: variance 0.1549
+  84. Neuron 1349: variance 0.1534
+  85. Neuron 141: variance 0.1513
+  86. Neuron 815: variance 0.1505
+  87. Neuron 1301: variance 0.1492
+  88. Neuron 998: variance 0.1488
+  89. Neuron 41: variance 0.1474
+  90. Neuron 632: variance 0.1473
+  91. Neuron 1447: variance 0.1440
+  92. Neuron 942: variance 0.1430
+  93. Neuron 993: variance 0.1428
+  94. Neuron 1004: variance 0.1424
+  95. Neuron 689: variance 0.1419
+  96. Neuron 169: variance 0.1407
+  97. Neuron 1269: variance 0.1399
+  98. Neuron 1067: variance 0.1393
+  99. Neuron 951: variance 0.1387
+  100. Neuron 1131: variance 0.1386
+
+Top Transformer variance neurons:
+  1. Neuron 745: variance 0.1718
+  2. Neuron 674: variance 0.1666
+  3. Neuron 670: variance 0.1482
+  4. Neuron 300: variance 0.1164
+  5. Neuron 655: variance 0.1108
+  6. Neuron 107: variance 0.1100
+  7. Neuron 627: variance 0.1060
+  8. Neuron 356: variance 0.0816
+  9. Neuron 86: variance 0.0803
+  10. Neuron 19: variance 0.0733
+  11. Neuron 459: variance 0.0704
+  12. Neuron 116: variance 0.0644
+  13. Neuron 525: variance 0.0618
+  14. Neuron 453: variance 0.0552
+  15. Neuron 49: variance 0.0529
+  16. Neuron 52: variance 0.0524
+  17. Neuron 213: variance 0.0503
+  18. Neuron 479: variance 0.0482
+  19. Neuron 439: variance 0.0477
+  20. Neuron 176: variance 0.0473
+  21. Neuron 762: variance 0.0411
+  22. Neuron 540: variance 0.0407
+  23. Neuron 271: variance 0.0395
+  24. Neuron 36: variance 0.0367
+  25. Neuron 724: variance 0.0353
+  26. Neuron 528: variance 0.0348
+  27. Neuron 756: variance 0.0348
+  28. Neuron 167: variance 0.0336
+  29. Neuron 289: variance 0.0326
+  30. Neuron 679: variance 0.0322
+  31. Neuron 374: variance 0.0320
+  32. Neuron 455: variance 0.0299
+  33. Neuron 408: variance 0.0299
+  34. Neuron 402: variance 0.0298
+  35. Neuron 311: variance 0.0289
+  36. Neuron 503: variance 0.0270
+  37. Neuron 623: variance 0.0266
+  38. Neuron 430: variance 0.0257
+  39. Neuron 497: variance 0.0246
+  40. Neuron 276: variance 0.0235
+  41. Neuron 361: variance 0.0231
+  42. Neuron 420: variance 0.0222
+  43. Neuron 496: variance 0.0216
+  44. Neuron 351: variance 0.0216
+  45. Neuron 377: variance 0.0207
+  46. Neuron 551: variance 0.0199
+  47. Neuron 55: variance 0.0192
+  48. Neuron 581: variance 0.0178
+  49. Neuron 608: variance 0.0172
+  50. Neuron 139: variance 0.0163
+  51. Neuron 622: variance 0.0160
+  52. Neuron 720: variance 0.0154
+  53. Neuron 699: variance 0.0153
+  54. Neuron 554: variance 0.0140
+  55. Neuron 365: variance 0.0124
+  56. Neuron 442: variance 0.0123
+  57. Neuron 308: variance 0.0103
+  58. Neuron 527: variance 0.0102
+  59. Neuron 288: variance 0.0101
+  60. Neuron 270: variance 0.0099
+  61. Neuron 511: variance 0.0096
+  62. Neuron 68: variance 0.0093
+  63. Neuron 362: variance 0.0087
+  64. Neuron 314: variance 0.0086
+  65. Neuron 566: variance 0.0075
+  66. Neuron 718: variance 0.0058
+  67. Neuron 320: variance 0.0057
+  68. Neuron 653: variance 0.0042
+  69. Neuron 232: variance 0.0039
+  70. Neuron 458: variance 0.0037
+  71. Neuron 145: variance 0.0037
+  72. Neuron 316: variance 0.0034
+  73. Neuron 32: variance 0.0034
+  74. Neuron 88: variance 0.0033
+  75. Neuron 423: variance 0.0032
+  76. Neuron 261: variance 0.0032
+  77. Neuron 400: variance 0.0032
+  78. Neuron 295: variance 0.0030
+  79. Neuron 12: variance 0.0030
+  80. Neuron 1: variance 0.0030
+  81. Neuron 97: variance 0.0030
+  82. Neuron 67: variance 0.0029
+  83. Neuron 568: variance 0.0029
+  84. Neuron 354: variance 0.0029
+  85. Neuron 507: variance 0.0028
+  86. Neuron 640: variance 0.0028
+  87. Neuron 282: variance 0.0028
+  88. Neuron 625: variance 0.0028
+  89. Neuron 234: variance 0.0027
+  90. Neuron 530: variance 0.0026
+  91. Neuron 177: variance 0.0025
+  92. Neuron 543: variance 0.0025
+  93. Neuron 726: variance 0.0024
+  94. Neuron 732: variance 0.0023
+  95. Neuron 110: variance 0.0023
+  96. Neuron 171: variance 0.0023
+  97. Neuron 159: variance 0.0023
+  98. Neuron 215: variance 0.0023
+  99. Neuron 84: variance 0.0023
+  100. Neuron 552: variance 0.0023
