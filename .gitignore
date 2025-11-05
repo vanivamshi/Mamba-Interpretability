@@ -1,0 +1,82 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# Pytest cache
+.pytest_cache/
+
+# IPython/Jupyter
+.ipynb_checkpoints
+*.ipynb
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.coverage
+coverage.xml
+htmlcov/
+
+# Logs
+*.log
+logs/
+
+# VS Code
+.vscode/
+
+# JetBrains IDEs
+.idea/
+
+# macOS
+.DS_Store
+
+# Thumbs
+Thumbs.db
+
+# Environment variables
+.env
+.env.*
+
+# Model checkpoints / weights
+*.pt
+*.pth
+checkpoints/
+
+# Project outputs and caches
+plots/
+images/
+neuron_cache/
+delta_neurons/images/
+dead_neurons/plots/
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# Misc
+.mamba_analysis.json
+
