@@ -8,7 +8,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig
 from datasets import load_dataset
 from delta_extraction import find_delta_sensitive_neurons_fixed, find_integrated_gradients_sensitive_neurons, find_combined_sensitive_neurons
 from utils import get_model_layers
-from integrated_gradients import integrate_integrated_gradients_neurons, IntegratedGradientsNeurons
+# from integrated_gradients import integrate_integrated_gradients_neurons, IntegratedGradientsNeurons  # NOT USED
 
 # --- Updated projection analysis function supporting GPT-2 attention projections ---
 def find_projection_dominant_neurons_fixed(model, layer_idx=0, top_k=10):
@@ -143,29 +143,31 @@ def main():
                 model, layer_idx=layer_idx, top_k=1000
             )
 
-            # Integrated gradients analysis
-            print(f"Running integrated gradients neuron analysis for layer {layer_idx}...")
-            try:
-                # Create sample input for integrated gradients analysis
-                sample_text = texts[0] if texts else "Sample text for analysis"
-                sample_input = tokenizer(sample_text, return_tensors="pt")["input_ids"]
-                integrated_gradients_neurons = integrate_integrated_gradients_neurons(
-                    model, sample_input, layer_indices=[layer_idx], methods=['attribution_weighted']
-                )
-            except Exception as e:
-                print(f"Integrated gradients analysis failed for layer {layer_idx}: {e}")
-                integrated_gradients_neurons = None
+            # # Integrated gradients analysis - NOT USED
+            # print(f"Running integrated gradients neuron analysis for layer {layer_idx}...")
+            # try:
+            #     # Create sample input for integrated gradients analysis
+            #     sample_text = texts[0] if texts else "Sample text for analysis"
+            #     sample_input = tokenizer(sample_text, return_tensors="pt")["input_ids"]
+            #     integrated_gradients_neurons = integrate_integrated_gradients_neurons(
+            #         model, sample_input, layer_indices=[layer_idx], methods=['attribution_weighted']
+            #     )
+            # except Exception as e:
+            #     print(f"Integrated gradients analysis failed for layer {layer_idx}: {e}")
+            #     integrated_gradients_neurons = None
+            integrated_gradients_neurons = None  # NOT USED
 
-            # Combined delta + integrated gradients analysis
-            print(f"Running combined delta + integrated gradients analysis for layer {layer_idx}...")
-            try:
-                combined_neurons = find_combined_sensitive_neurons(
-                    model, tokenizer, texts, layer_idx=layer_idx, top_k=1000,
-                    delta_weight=0.5, integrated_gradients_weight=0.5
-                )
-            except Exception as e:
-                print(f"Combined analysis failed for layer {layer_idx}: {e}")
-                combined_neurons = None
+            # # Combined delta + integrated gradients analysis - NOT USED
+            # print(f"Running combined delta + integrated gradients analysis for layer {layer_idx}...")
+            # try:
+            #     combined_neurons = find_combined_sensitive_neurons(
+            #         model, tokenizer, texts, layer_idx=layer_idx, top_k=1000,
+            #         delta_weight=0.5, integrated_gradients_weight=0.5
+            #     )
+            # except Exception as e:
+            #     print(f"Combined analysis failed for layer {layer_idx}: {e}")
+            #     combined_neurons = None
+            combined_neurons = None  # NOT USED
 
             model_results[layer_idx] = {
                 "delta_variance": delta_results,
@@ -183,17 +185,17 @@ def main():
         aggregated_results[label] = {
             "delta_variance": [],
             "projection_magnitudes": [],
-            "integrated_gradients_neurons": None,  # Keep as dict structure
+            "integrated_gradients_neurons": None,  # Keep as dict structure - NOT USED
             "combined_analysis": [],
         }
         
-        # Aggregate integrated gradients differently (it's a dict, not a list)
-        ig_combined = {
-            "integrated_gradients_data": {},
-            "ig_neurons": {},
-            "analysis_results": {},
-            "analyzer": None
-        }
+        # # Aggregate integrated gradients differently (it's a dict, not a list) - NOT USED
+        # ig_combined = {
+        #     "integrated_gradients_data": {},
+        #     "ig_neurons": {},
+        #     "analysis_results": {},
+        #     "analyzer": None
+        # }
         
         for layer_idx, results in layer_results.items():
             # Handle list-based measures
@@ -204,53 +206,53 @@ def main():
             if results["combined_analysis"] is not None:
                 aggregated_results[label]["combined_analysis"].extend(results["combined_analysis"])
             
-            # Handle dict-based integrated gradients
-            if results["integrated_gradients_neurons"] is not None and isinstance(results["integrated_gradients_neurons"], dict):
-                ig_data = results["integrated_gradients_neurons"]
-                
-                # Merge integrated gradients data
-                if "integrated_gradients_data" in ig_data:
-                    ig_combined["integrated_gradients_data"].update(ig_data["integrated_gradients_data"])
-                if "ig_neurons" in ig_data:
-                    for method, neurons in ig_data["ig_neurons"].items():
-                        if method not in ig_combined["ig_neurons"]:
-                            ig_combined["ig_neurons"][method] = {}
-                        ig_combined["ig_neurons"][method].update(neurons)
-                if "analysis_results" in ig_data:
-                    for method, results_data in ig_data["analysis_results"].items():
-                        if method not in ig_combined["analysis_results"]:
-                            ig_combined["analysis_results"][method] = {}
-                        ig_combined["analysis_results"][method].update(results_data)
-                if "analyzer" in ig_data and ig_combined["analyzer"] is None:
-                    ig_combined["analyzer"] = ig_data["analyzer"]
+            # # Handle dict-based integrated gradients - NOT USED
+            # if results["integrated_gradients_neurons"] is not None and isinstance(results["integrated_gradients_neurons"], dict):
+            #     ig_data = results["integrated_gradients_neurons"]
+            #     
+            #     # Merge integrated gradients data
+            #     if "integrated_gradients_data" in ig_data:
+            #         ig_combined["integrated_gradients_data"].update(ig_data["integrated_gradients_data"])
+            #     if "ig_neurons" in ig_data:
+            #         for method, neurons in ig_data["ig_neurons"].items():
+            #             if method not in ig_combined["ig_neurons"]:
+            #                 ig_combined["ig_neurons"][method] = {}
+            #             ig_combined["ig_neurons"][method].update(neurons)
+            #     if "analysis_results" in ig_data:
+            #         for method, results_data in ig_data["analysis_results"].items():
+            #             if method not in ig_combined["analysis_results"]:
+            #                 ig_combined["analysis_results"][method] = {}
+            #             ig_combined["analysis_results"][method].update(results_data)
+            #     if "analyzer" in ig_data and ig_combined["analyzer"] is None:
+            #         ig_combined["analyzer"] = ig_data["analyzer"]
         
-        # Only set if we collected any integrated gradients data
-        if ig_combined["integrated_gradients_data"] or ig_combined["ig_neurons"]:
-            aggregated_results[label]["integrated_gradients_neurons"] = ig_combined
+        # # Only set if we collected any integrated gradients data - NOT USED
+        # if ig_combined["integrated_gradients_data"] or ig_combined["ig_neurons"]:
+        #     aggregated_results[label]["integrated_gradients_neurons"] = ig_combined
 
     # Print top neurons based on z-scores
     print_top_zscores(aggregated_results, "delta_variance")
     print_top_zscores(aggregated_results, "projection_magnitudes")
-    print_top_zscores(aggregated_results, "integrated_gradients_neurons")
+    # print_top_zscores(aggregated_results, "integrated_gradients_neurons")  # NOT USED
     print_top_zscores(aggregated_results, "combined_analysis")
 
     # Plot with corrected output directories
     plot_zscores(aggregated_results, "delta_variance", "Delta-Sensitive Neuron Z-scores", base_image_dir)
     plot_zscores(aggregated_results, "projection_magnitudes", "Projection-Dominant Neuron Z-scores", base_image_dir)
-    plot_zscores(aggregated_results, "integrated_gradients_neurons", "Integrated Gradients Neuron Z-scores", base_image_dir)
+    # plot_zscores(aggregated_results, "integrated_gradients_neurons", "Integrated Gradients Neuron Z-scores", base_image_dir)  # NOT USED
     plot_zscores(aggregated_results, "combined_analysis", "Combined Delta+Integrated Gradients Neuron Z-scores", base_image_dir)
 
-    # Visualize integrated gradients neurons
-    visualize_integrated_gradients_neurons(aggregated_results, base_image_dir)
+    # # Visualize integrated gradients neurons - NOT USED
+    # visualize_integrated_gradients_neurons(aggregated_results, base_image_dir)
     
-    # Export integrated gradients analysis results
-    export_integrated_gradients_analysis(aggregated_results, base_attn_dir)
+    # # Export integrated gradients analysis results - NOT USED
+    # export_integrated_gradients_analysis(aggregated_results, base_attn_dir)
 
-    # Compare integrated gradients patterns across different models
-    compare_integrated_gradients_patterns(aggregated_results, base_image_dir)
+    # # Compare integrated gradients patterns across different models - NOT USED
+    # compare_integrated_gradients_patterns(aggregated_results, base_image_dir)
 
-    # Display integrated gradients summary
-    display_integrated_gradients_summary(aggregated_results)
+    # # Display integrated gradients summary - NOT USED
+    # display_integrated_gradients_summary(aggregated_results)
     
     # Save final aggregated JSON files
     aggregated_json_path = "projection_neurons/all_layers_aggregated_results.json"
@@ -278,32 +280,32 @@ def print_top_zscores(results, measure_name):
             data = metrics["delta_variance"]
         elif measure_name == "projection_magnitudes":
             data = metrics["projection_magnitudes"]
-        elif measure_name == "integrated_gradients_neurons":
-            if metrics["integrated_gradients_neurons"] is None:
-                continue
-            # Extract integrated gradients neuron activations from the analysis results
-            ig_data = metrics["integrated_gradients_neurons"]
-            if not isinstance(ig_data, dict):
-                print(f"Warning: integrated_gradients_neurons for {label} is not a dict, skipping")
-                continue
-            if "analysis_results" in ig_data and "attribution_weighted" in ig_data["analysis_results"]:
-                # Collect from all layers
-                all_activations = []
-                for layer_idx, layer_data in ig_data["analysis_results"]["attribution_weighted"].items():
-                    if "neuron_activations" in layer_data:
-                        # Convert to the expected format [(neuron_idx, value), ...]
-                        activations = layer_data["neuron_activations"]
-                        if hasattr(activations, 'cpu'):
-                            activations = activations.cpu().numpy()
-                        elif not hasattr(activations, '__len__'):
-                            continue
-                        layer_data_list = [(i, float(activations[i])) for i in range(len(activations))]
-                        all_activations.extend(layer_data_list)
-                if not all_activations:
-                    continue
-                data = all_activations
-            else:
-                continue
+        # elif measure_name == "integrated_gradients_neurons":  # NOT USED
+        #     if metrics["integrated_gradients_neurons"] is None:
+        #         continue
+        #     # Extract integrated gradients neuron activations from the analysis results
+        #     ig_data = metrics["integrated_gradients_neurons"]
+        #     if not isinstance(ig_data, dict):
+        #         print(f"Warning: integrated_gradients_neurons for {label} is not a dict, skipping")
+        #         continue
+        #     if "analysis_results" in ig_data and "attribution_weighted" in ig_data["analysis_results"]:
+        #         # Collect from all layers
+        #         all_activations = []
+        #         for layer_idx, layer_data in ig_data["analysis_results"]["attribution_weighted"].items():
+        #             if "neuron_activations" in layer_data:
+        #                 # Convert to the expected format [(neuron_idx, value), ...]
+        #                 activations = layer_data["neuron_activations"]
+        #                 if hasattr(activations, 'cpu'):
+        #                     activations = activations.cpu().numpy()
+        #                 elif not hasattr(activations, '__len__'):
+        #                     continue
+        #                 layer_data_list = [(i, float(activations[i])) for i in range(len(activations))]
+        #                 all_activations.extend(layer_data_list)
+        #         if not all_activations:
+        #             continue
+        #         data = all_activations
+        #     else:
+        #         continue
         elif measure_name == "combined_analysis":
             if not metrics["combined_analysis"]:
                 continue
@@ -339,32 +341,32 @@ def plot_zscores(results, measure_name, title, save_dir="images"):
             data = results[label]["delta_variance"]
         elif measure_name == "projection_magnitudes":
             data = results[label]["projection_magnitudes"]
-        elif measure_name == "integrated_gradients_neurons":
-            if results[label]["integrated_gradients_neurons"] is None:
-                continue
-            # Extract integrated gradients neuron activations from the analysis results
-            ig_data = results[label]["integrated_gradients_neurons"]
-            if not isinstance(ig_data, dict):
-                print(f"Warning: integrated_gradients_neurons for {label} is not a dict, skipping")
-                continue
-            if "analysis_results" in ig_data and "attribution_weighted" in ig_data["analysis_results"]:
-                # Collect from all layers
-                all_activations = []
-                for layer_idx, layer_data in ig_data["analysis_results"]["attribution_weighted"].items():
-                    if "neuron_activations" in layer_data:
-                        # Convert to the expected format [(neuron_idx, value), ...]
-                        activations = layer_data["neuron_activations"]
-                        if hasattr(activations, 'cpu'):
-                            activations = activations.cpu().numpy()
-                        elif not hasattr(activations, '__len__'):
-                            continue
-                        layer_data_list = [(i, float(activations[i])) for i in range(len(activations))]
-                        all_activations.extend(layer_data_list)
-                if not all_activations:
-                    continue
-                data = all_activations
-            else:
-                continue
+        # elif measure_name == "integrated_gradients_neurons":  # NOT USED
+        #     if results[label]["integrated_gradients_neurons"] is None:
+        #         continue
+        #     # Extract integrated gradients neuron activations from the analysis results
+        #     ig_data = results[label]["integrated_gradients_neurons"]
+        #     if not isinstance(ig_data, dict):
+        #         print(f"Warning: integrated_gradients_neurons for {label} is not a dict, skipping")
+        #         continue
+        #     if "analysis_results" in ig_data and "attribution_weighted" in ig_data["analysis_results"]:
+        #         # Collect from all layers
+        #         all_activations = []
+        #         for layer_idx, layer_data in ig_data["analysis_results"]["attribution_weighted"].items():
+        #             if "neuron_activations" in layer_data:
+        #                 # Convert to the expected format [(neuron_idx, value), ...]
+        #                 activations = layer_data["neuron_activations"]
+        #                 if hasattr(activations, 'cpu'):
+        #                     activations = activations.cpu().numpy()
+        #                 elif not hasattr(activations, '__len__'):
+        #                     continue
+        #                 layer_data_list = [(i, float(activations[i])) for i in range(len(activations))]
+        #                 all_activations.extend(layer_data_list)
+        #         if not all_activations:
+        #             continue
+        #         data = all_activations
+        #     else:
+        #         continue
         elif measure_name == "combined_analysis":
             if results[label]["combined_analysis"] is None or not results[label]["combined_analysis"]:
                 continue
