@@ -80,3 +80,6 @@ dead_neurons/plots/
 # Misc
 .mamba_analysis.json
 
+__pycache__/
+*.pyc
+projection_neurons/images/*.png
