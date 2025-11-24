@@ -6,7 +6,12 @@ import matplotlib.pyplot as plt
 import os
 from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig
 from datasets import load_dataset
-from delta_extraction import find_delta_sensitive_neurons_fixed, find_integrated_gradients_sensitive_neurons, find_combined_sensitive_neurons
+from delta_extraction import (
+    find_delta_sensitive_neurons_fixed,
+    find_integrated_gradients_sensitive_neurons,
+    find_combined_sensitive_neurons,
+    plot_per_layer_neuron_distributions_for_models,
+)
 from utils import get_model_layers
 # from integrated_gradients import integrate_integrated_gradients_neurons, IntegratedGradientsNeurons  # NOT USED
 
@@ -79,6 +84,11 @@ def find_projection_dominant_neurons_fixed(model, layer_idx=0, top_k=10):
 
 # --- Main program ---
 def main():
+    # Toggle to produce per-layer per-neuron distribution grid
+    # Enabled by default per collaborator request
+    ENABLE_PER_LAYER_DISTRIBUTION_PLOT = True
+    MAX_TEXTS_PER_LAYER_FOR_PLOTTING = 200
+
     # Define output directories
     base_image_dir = "projection_neurons/images"
     base_attn_dir = "projection_neurons/attention_analysis"
@@ -93,7 +103,8 @@ def main():
     try:
         dataset = load_dataset("Salesforce/wikitext", "wikitext-2-v1", split="train")
         texts = [item["text"] for item in dataset if item["text"].strip() != ""]
-        texts = texts[:10]  # Reduce for faster testing
+        # Use a larger sample for plotting; limit to 500 for performance
+        texts = texts[:500]
         print(f"Loaded {len(texts)} non-empty samples from Wikitext.")
     except Exception as e:
         print(f"Error loading dataset: {e}")
@@ -112,6 +123,8 @@ def main():
     }
 
     all_results = {}
+    # keep loaded models/tokenizers for optional plotting
+    models_loaded = {}
 
     for label, model_name in models_to_compare.items():
         print(f"\n=== Loading model: {label} ===")
@@ -124,6 +137,9 @@ def main():
         config = AutoConfig.from_pretrained(model_name)
         num_layers = config.num_hidden_layers
         print(f"Model has {num_layers} layers")
+
+        # Store model and tokenizer for optional downstream plotting
+        models_loaded[label] = (model, tokenizer, num_layers)
 
         model_results = {}
 
@@ -269,6 +285,20 @@ def main():
         import json
         json.dump(serializable_results, f, indent=2, default=str)
     print(f"Saved aggregated results to {aggregated_json_path}")
+
+    # Optional: produce per-layer per-neuron distribution grid for all loaded models
+    if ENABLE_PER_LAYER_DISTRIBUTION_PLOT and models_loaded:
+        try:
+            models_info = [(m, tok, lbl) for lbl, (m, tok, nl) in models_loaded.items()]
+            # Use the maximum num_layers among models to layout the grid
+            max_layers = max(nl for (_, _, nl) in models_loaded.values())
+            save_path = plot_per_layer_neuron_distributions_for_models(
+                models_info, texts, num_layers=max_layers, save_path=None,
+                max_texts_per_layer=MAX_TEXTS_PER_LAYER_FOR_PLOTTING
+            )
+            print(f"Saved per-layer neuron distribution grid to {save_path}")
+        except Exception as e:
+            print(f"Failed to create per-layer distribution grid: {e}")
 
 
 def print_top_zscores(results, measure_name):

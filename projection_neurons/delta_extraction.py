@@ -2,6 +2,8 @@ import torch
 import numpy as np
 from utils import get_model_layers
 from attention_neurons import MambaAttentionNeurons
+import matplotlib.pyplot as plt
+import os
 
 def extract_deltas_fixed(model, layer_idx, input_ids):
     """
@@ -435,3 +437,135 @@ def find_combined_sensitive_neurons(model, tokenizer, texts, layer_idx=0, top_k=
     except Exception as e:
         print(f"Error in combined analysis: {e}")
         return [(i, float(i)) for i in range(top_k)]
+
+
+def compute_layer_neuron_variances(model, tokenizer, texts, layer_idx=0, max_texts=None):
+    """
+    Compute per-neuron variance (across texts) for the given layer by extracting
+    delta vectors and computing variance across examples for each neuron.
+
+    Returns:
+        1D numpy array of length == hidden size containing variance per neuron.
+    """
+    examples = []
+    count = 0
+    for text in texts:
+        if max_texts is not None and count >= max_texts:
+            break
+        try:
+            input_ids = tokenizer(text, return_tensors="pt")["input_ids"]
+            delta = extract_deltas_fixed(model, layer_idx, input_ids)
+
+            # Normalize delta to 1D hidden vector per example similar to other functions
+            if hasattr(delta, 'dim'):
+                if delta.dim() == 3:  # (batch, seq, hidden)
+                    delta_mean = delta.mean(dim=(0, 1))
+                elif delta.dim() == 2:  # (seq, hidden)
+                    delta_mean = delta.mean(dim=0)
+                else:
+                    delta_mean = delta
+                if hasattr(delta_mean, 'cpu'):
+                    arr = delta_mean.cpu().numpy()
+                else:
+                    arr = np.array(delta_mean)
+            else:
+                # Already numpy-like
+                arr = np.array(delta)
+
+            # Ensure 1D
+            arr = np.asarray(arr).reshape(-1)
+            examples.append(arr)
+            count += 1
+        except Exception:
+            # skip problematic examples but keep going
+            continue
+
+    if not examples:
+        # Return a dummy small-variance vector of reasonable length (512)
+        return np.zeros(512)
+
+    all_examples = np.vstack(examples)
+    # Variance across examples for each neuron (column-wise)
+    variances = np.var(all_examples, axis=0)
+    return variances
+
+
+def plot_per_layer_neuron_distributions_for_models(models_info, texts,
+                                                   num_layers, save_path=None,
+                                                   max_texts_per_layer=200, cols=2):
+    """
+    Create a grid of subplots showing per-neuron distributions (variance) for each layer
+    for multiple models. `models_info` should be a list of tuples: (model, label).
+
+    Layout: rows = num_layers, cols = number of models (or specified `cols` organizes models across columns).
+
+    Args:
+        models_info: list of (model, label) tuples
+        tokenizer: tokenizer used for all models (or dict mapping labels to tokenizers)
+        texts: iterable of input texts to compute variances across
+        num_layers: number of layers to visualize
+        save_path: file path to save the composed figure (defaults to `projection_neurons/images/per_layer_neuron_distributions.png`)
+        max_texts_per_layer: max examples per layer to use when computing variance (for speed)
+        cols: number of columns in the grid per model grouping (unused if len(models_info) used)
+
+    Returns:
+        Path to saved figure.
+    """
+    if save_path is None:
+        images_dir = os.path.join(os.path.dirname(__file__), "images")
+        os.makedirs(images_dir, exist_ok=True)
+        save_path = os.path.join(images_dir, "per_layer_neuron_distributions.png")
+
+    # models_info is expected to be a list of tuples: (model, tokenizer, label)
+    num_models = len(models_info)
+    rows = num_layers
+    cols = num_models
+
+    # Precompute variances per model per layer to determine y-limits
+    variances_by_model = {}
+    for model, tokenizer, label in models_info:
+        variances_by_model[label] = []
+        for layer_idx in range(num_layers):
+            var = compute_layer_neuron_variances(model, tokenizer, texts, layer_idx, max_texts=max_texts_per_layer)
+            variances_by_model[label].append(var)
+
+    # Determine per-model max for consistent y-axis scaling across layers of a model
+    max_by_model = {label: max([v.max() if v.size else 0 for v in varlist]) for label, varlist in variances_by_model.items()}
+
+    fig, axes = plt.subplots(rows, cols, figsize=(5 * cols, 2.5 * rows), sharex=False)
+    if rows == 1 and cols == 1:
+        axes = np.array([[axes]])
+    elif rows == 1:
+        axes = axes[np.newaxis, :]
+    elif cols == 1:
+        axes = axes[:, np.newaxis]
+
+    for r in range(rows):
+        for c, (model, label) in enumerate(models_info):
+            ax = axes[r, c]
+            var = variances_by_model[label][r]
+            if var is None or len(var) == 0:
+                ax.text(0.5, 0.5, 'No data', ha='center', va='center')
+                ax.set_xticks([])
+                ax.set_yticks([])
+                continue
+
+            x = np.arange(len(var))
+            ax.bar(x, var, color='#7fb3d5' if 'Mamba' in label else '#f5b7b1', width=1.0)
+            ax.set_xlim(0, len(var))
+            ax.set_ylim(0, max_by_model[label] * 1.05 if max_by_model[label] > 0 else None)
+            if r == 0:
+                ax.set_title(f"{label}")
+            if c == 0:
+                ax.set_ylabel(f"Layer {r} variance")
+            # Reduce x-axis clutter for many neurons
+            if len(var) > 200:
+                ax.set_xticks([])
+            else:
+                ax.set_xlabel("Neuron Index")
+            ax.grid(axis='y', linestyle=':', alpha=0.6)
+
+    plt.tight_layout()
+    fig.savefig(save_path, dpi=200)
+    plt.close(fig)
+    return save_path
