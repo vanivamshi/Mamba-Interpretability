@@ -85,9 +85,13 @@ def find_projection_dominant_neurons_fixed(model, layer_idx=0, top_k=10):
 # --- Main program ---
 def main():
     # Toggle to produce per-layer per-neuron distribution grid
-    # Enabled by default per collaborator request
-    ENABLE_PER_LAYER_DISTRIBUTION_PLOT = True
-    MAX_TEXTS_PER_LAYER_FOR_PLOTTING = 200
+    # Can be controlled via environment variables for faster testing:
+    #   ENABLE_PER_LAYER_DISTRIBUTION_PLOT=0  (or false) to disable
+    #   MAX_SAMPLES=20 to limit number of texts processed
+    #   MAX_TEXTS_PER_LAYER_FOR_PLOTTING=50 to limit examples used per-layer when computing variances
+    ENABLE_PER_LAYER_DISTRIBUTION_PLOT = os.environ.get("ENABLE_PER_LAYER_DISTRIBUTION_PLOT", "true").lower() in ("1", "true", "yes")
+    MAX_SAMPLES = int(os.environ.get("MAX_SAMPLES", "500"))
+    MAX_TEXTS_PER_LAYER_FOR_PLOTTING = int(os.environ.get("MAX_TEXTS_PER_LAYER_FOR_PLOTTING", "200"))
 
     # Define output directories
     base_image_dir = "projection_neurons/images"
@@ -103,9 +107,9 @@ def main():
     try:
         dataset = load_dataset("Salesforce/wikitext", "wikitext-2-v1", split="train")
         texts = [item["text"] for item in dataset if item["text"].strip() != ""]
-        # Use a larger sample for plotting; limit to 500 for performance
-        texts = texts[:500]
-        print(f"Loaded {len(texts)} non-empty samples from Wikitext.")
+        # Respect MAX_SAMPLES env var to limit work for faster testing
+        texts = texts[:MAX_SAMPLES]
+        print(f"Loaded {len(texts)} non-empty samples from Wikitext (MAX_SAMPLES={MAX_SAMPLES}).")
     except Exception as e:
         print(f"Error loading dataset: {e}")
         texts = [
