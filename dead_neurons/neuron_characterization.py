@@ -4,7 +4,7 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-from delta_extraction import evaluate_perplexity # Keep this import for evaluate_perplexity
+# from delta_extraction import evaluate_perplexity # Removed to avoid import error
 from attention_neurons import integrate_mamba_attention_neurons, MambaAttentionNeurons
 from utils import get_model_layers, get_activation_hook_target
 
@@ -436,6 +436,36 @@ def register_ablation_hook(model, layer_idx, neurons_to_ablate):
 
     handle = layers[layer_idx].register_forward_hook(ablation_hook)
     return handle
+
+
+def evaluate_perplexity(model, tokenizer, texts, device, ablate_layer=None, ablate_neurons=None):
+    model.to(device)
+    model.eval()
+    total_loss, total_tokens = 0, 0
+
+    hook = None
+    if ablate_layer is not None and ablate_neurons is not None:
+        def hook_fn(module, input, output):
+            if isinstance(output, tuple):
+                output[0][:, :, ablate_neurons] = 0
+                return output
+            else:
+                output[:, :, ablate_neurons] = 0
+                return output
+        layers = get_model_layers(model)
+        if ablate_layer < len(layers):
+            hook = layers[ablate_layer].register_forward_hook(hook_fn)
+
+    with torch.no_grad():
+        for text in texts:
+            enc = tokenizer(text, return_tensors="pt").to(device)
+            labels = enc.input_ids.clone()
+            loss = model(**enc, labels=labels).loss
+            total_loss += loss.item() * labels.numel()
+            total_tokens += labels.numel()
+
+    if hook: hook.remove()
+    return np.exp(total_loss / total_tokens)
 
 
 def ablate_neurons_and_evaluate_perplexity(model, tokenizer, texts, layer_idx, neurons_to_ablate):
